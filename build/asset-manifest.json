@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/anagram-sandbox/static/css/main.dd4afc59.css",
+    "main.js": "/anagram-sandbox/static/js/main.09620aeb.js",
+    "static/js/453.452d2c25.chunk.js": "/anagram-sandbox/static/js/453.452d2c25.chunk.js",
+    "index.html": "/anagram-sandbox/index.html",
+    "main.dd4afc59.css.map": "/anagram-sandbox/static/css/main.dd4afc59.css.map",
+    "main.09620aeb.js.map": "/anagram-sandbox/static/js/main.09620aeb.js.map",
+    "453.452d2c25.chunk.js.map": "/anagram-sandbox/static/js/453.452d2c25.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.dd4afc59.css",
+    "static/js/main.09620aeb.js"
+  ]
+}
