@@ -6,37 +6,105 @@ function App() {
   const [remainingLetters, setRemainingLetters] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
 
+  // Function to serialize selectedItems into a string
+  const serializeSelectedItems = (items) => {
+    return items
+      .map((item) => (item.type === 'letter' ? item.value : '|'))
+      .join('');
+  };
+
+  // Function to deserialize a string into selectedItems
+  const deserializeSelectedItems = (str) => {
+    const items = [];
+    for (const char of str) {
+      if (char === '|') {
+        items.push({ type: 'linebreak', value: '⏎' });
+      } else {
+        items.push({ type: 'letter', value: char });
+      }
+    }
+    return items;
+  };
+
+  // Function to update the URL with the current state
+  const updateURL = (input, items) => {
+    const params = new URLSearchParams();
+    params.set('input', encodeURIComponent(input));
+    params.set('anagram', encodeURIComponent(serializeSelectedItems(items)));
+    const newUrl = `${window.location.pathname}?${params.toString()}`;
+    window.history.replaceState(null, '', newUrl);
+  };
+
+  // Initialize state from URL
   useEffect(() => {
-    const lettersArray = inputWord.replace(/\s+/g, '').toUpperCase().split('');
+    const params = new URLSearchParams(window.location.search);
+    const inputFromUrl = params.get('input');
+    const anagramFromUrl = params.get('anagram');
+    if (inputFromUrl && anagramFromUrl) {
+      const decodedInput = decodeURIComponent(inputFromUrl);
+      setInputWord(decodedInput);
+      const lettersArray = decodedInput.replace(/\s+/g, '').toUpperCase().split('');
+      const deserializedItems = deserializeSelectedItems(decodeURIComponent(anagramFromUrl));
+      setSelectedItems(deserializedItems);
+
+      // Remove selected letters from remainingLetters considering duplicates
+      const selectedLetters = deserializedItems
+        .filter((item) => item.type === 'letter')
+        .map((item) => item.value);
+
+      let newRemainingLetters = [...lettersArray];
+      selectedLetters.forEach((selLetter) => {
+        const index = newRemainingLetters.indexOf(selLetter);
+        if (index !== -1) {
+          newRemainingLetters.splice(index, 1);
+        }
+      });
+
+      setRemainingLetters(newRemainingLetters);
+    } else {
+      // Initialize empty state
+      setInputWord('');
+      setRemainingLetters([]);
+      setSelectedItems([]);
+    }
+  }, []);
+
+  // Update remainingLetters when inputWord changes
+  const handleInputChange = (e) => {
+    const newInput = e.target.value;
+    setInputWord(newInput);
+    const lettersArray = newInput.replace(/\s+/g, '').toUpperCase().split('');
     setRemainingLetters(lettersArray);
     setSelectedItems([]);
-  }, [inputWord]);
-
-  const handleInputChange = (e) => {
-    setInputWord(e.target.value);
+    // Update URL to reflect new input
+    updateURL(newInput, []);
   };
 
   const selectLetter = (index) => {
     const letter = remainingLetters[index];
-    setSelectedItems([...selectedItems, { type: 'letter', value: letter }]);
-    setRemainingLetters(remainingLetters.filter((_, i) => i !== index));
+    const newSelectedItems = [...selectedItems, { type: 'letter', value: letter }];
+    setSelectedItems(newSelectedItems);
+    const newRemainingLetters = remainingLetters.filter((_, i) => i !== index);
+    setRemainingLetters(newRemainingLetters);
+    updateURL(inputWord, newSelectedItems);
   };
 
   const deselectItem = (index) => {
     const item = selectedItems[index];
+    let newRemainingLetters = remainingLetters;
     if (item.type === 'letter') {
-      setRemainingLetters([...remainingLetters, item.value]);
+      newRemainingLetters = [...remainingLetters, item.value];
+      setRemainingLetters(newRemainingLetters);
     }
-    setSelectedItems(selectedItems.filter((_, i) => i !== index));
+    const newSelectedItems = selectedItems.filter((_, i) => i !== index);
+    setSelectedItems(newSelectedItems);
+    updateURL(inputWord, newSelectedItems);
   };
 
-  const insertSpace = (index) => {
-    const newSelectedItems = [
-      ...selectedItems.slice(0, index),
-      { type: 'space', value: ' ' },
-      ...selectedItems.slice(index),
-    ];
+  const addLineBreak = () => {
+    const newSelectedItems = [...selectedItems, { type: 'linebreak', value: '⏎' }];
     setSelectedItems(newSelectedItems);
+    updateURL(inputWord, newSelectedItems);
   };
 
   return (
@@ -49,21 +117,32 @@ function App() {
       />
       <div className="letters-container">
         <div className="selected-letters">
-          {selectedItems.map((item, index) => (
-            <React.Fragment key={`selected-${index}`}>
+          {selectedItems.map((item, index) =>
+            item.type === 'linebreak' ? (
+              <React.Fragment key={`selected-${index}`}>
+                <span
+                  className="linebreak"
+                  onClick={() => deselectItem(index)}
+                >
+                  {item.value}
+                </span>
+                <br />
+              </React.Fragment>
+            ) : (
               <span
-                className={`letter selected ${item.type}`}
+                key={`selected-${index}`}
+                className="letter selected"
                 onClick={() => deselectItem(index)}
               >
                 {item.value}
               </span>
-            </React.Fragment>
-          ))}
+            )
+          )}
 
-          {/* Insert newline button */}
-          {(selectedItems.length > 0 && <
-            button className="insert-space-button" onClick={() => insertSpace(selectedItems.length)}>
-              +
+          {/* Add Line Break Button */}
+          {selectedItems.length > 0 && (
+            <button className="add-linebreak-button" onClick={addLineBreak}>
+              ⏎
             </button>
           )}
         </div>

@@ -1,7 +1,7 @@
 .App {
   margin: 20px;
   text-align: center;
-  font-family: Arial, sans-serif;
+  font-family: monospace;
 }
 
 form {
@@ -37,6 +37,10 @@ button {
   background-color: #f9f9f9;
 }
 
+.selected-letters {
+  text-align: left;
+}
+
 .letter {
   display: inline-block;
   margin: 5px;
@@ -55,31 +59,6 @@ button {
 
 .selected {
   background-color: #ffeb3b;
-}
-
-/* ... existing styles ... */
-
-.add-space-button {
-  margin-left: 10px;
-  padding: 5px 10px;
-  font-size: 16px;
-  cursor: pointer;
-}
-
-.space {
-  display: inline-block;
-  margin: 5px;
-  padding: 10px;
-  font-size: 24px;
-  cursor: pointer;
-  color: #888;
-  border: 1px dashed #ccc;
-  border-radius: 4px;
-}
-
-.space:hover {
-  color: #000;
-  border-color: #888;
 }
 
 
