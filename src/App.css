@@ -1,38 +1,85 @@
 .App {
+  margin: 20px;
   text-align: center;
+  font-family: Arial, sans-serif;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+form {
+  margin-top: 20px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+input[type="text"] {
+  padding: 10px;
+  font-size: 16px;
+  width: 300px;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.letters-container {
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  margin-top: 30px;
 }
 
-.App-link {
-  color: #61dafb;
+.selected-letters,
+.remaining-letters {
+  width: 300px;
+  min-height: 50px;
+  border: 1px solid #ccc;
+  margin: 0 10px;
+  padding: 10px;
+  background-color: #f9f9f9;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.letter {
+  display: inline-block;
+  margin: 5px;
+  padding: 10px;
+  font-size: 24px;
+  cursor: pointer;
+  border: 1px solid #000;
+  border-radius: 4px;
+  background-color: #fff;
+  transition: background-color 0.3s;
 }
+
+.letter:hover {
+  background-color: #e0e0e0;
+}
+
+.selected {
+  background-color: #ffeb3b;
+}
+
+/* ... existing styles ... */
+
+.add-space-button {
+  margin-left: 10px;
+  padding: 5px 10px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.space {
+  display: inline-block;
+  margin: 5px;
+  padding: 10px;
+  font-size: 24px;
+  cursor: pointer;
+  color: #888;
+  border: 1px dashed #ccc;
+  border-radius: 4px;
+}
+
+.space:hover {
+  color: #000;
+  border-color: #888;
+}
+
+
